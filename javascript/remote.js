@@ -60,11 +60,11 @@ TransmissionRemote.prototype =
 			remote._error = '服务器未响应';
 
 		dialog.confirm('连接已断开',
-			'无法连接到服务器，您可能需要重新载入页面重新连接。',
+			'无法连接到服务器. 您可尝试刷新页面来重新连接到服务器.',
 			'详情',
 			'alert(remote._error);',
 			null,
-			'解除');
+			'忽略');
 		remote._controller.togglePeriodicSessionRefresh(false);
 	},
 
@@ -121,6 +121,18 @@ TransmissionRemote.prototype =
 		this.sendRequest(o, function(response) {
 			var args = response['arguments'];
 			callback.call(context,args.torrents,args.removed);
+		});
+	},
+
+	getFreeSpace: function(dir, callback, context) {
+		var remote = this;
+		var o = {
+			method: 'free-space',
+			arguments: { path: dir }
+		};
+		this.sendRequest(o, function(response) {
+			var args = response['arguments'];
+			callback.call (context, args.path, args['size-bytes']);
 		});
 	},
 

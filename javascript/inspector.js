@@ -132,9 +132,9 @@ function Inspector(controller) {
             if( isMixed )
                 str = mixed;
             else if( allFinished )
-                str = '完成';
+                str = '已完成';
             else if( allPaused )
-                str = '暂停';
+                str = '已暂停';
             else
                 str = torrents[0].getStateString();
         }
@@ -655,7 +655,7 @@ function Inspector(controller) {
 
     lastAnnounceStatus = function(tracker) {
 
-        var lastAnnounceLabel = '最后一次通告时间',
+        var lastAnnounceLabel = '最后一次汇报时间',
             lastAnnounce = [ 'N/A' ],
         lastAnnounceTime;
 
@@ -664,7 +664,7 @@ function Inspector(controller) {
             if (tracker.lastAnnounceSucceeded) {
                 lastAnnounce = [ lastAnnounceTime, ' (得到',  Transmission.fmt.countString('peer','peers',tracker.lastAnnouncePeerCount), ')' ];
             } else {
-                lastAnnounceLabel = '通告时错误';
+                lastAnnounceLabel = '汇报时错误';
                 lastAnnounce = [ (tracker.lastAnnounceResult ? (tracker.lastAnnounceResult + ' - ') : ''), lastAnnounceTime ];
             }
         }

@@ -164,9 +164,9 @@ TorrentRendererFull.prototype =
 			if (webseed_count && peer_count)
 			{
 				// Downloading from 2 of 3 peer(s) and 2 webseed(s)
-				return [ '下载中 from',
+				return [ '从',
 				         t.getPeersSendingToUs(),
-				         '总共',
+				         '个 perrs 下载 总共',
 				         fmt.countString('peer','peers',peer_count),
 				         'and',
 				         fmt.countString('web seed','web seeds',webseed_count),
@@ -177,18 +177,18 @@ TorrentRendererFull.prototype =
 			else if (webseed_count)
 			{
 				// Downloading from 2 webseed(s)
-				return [ '下载中 from',
+				return [ '从',
 				         fmt.countString('web seed','web seeds',webseed_count),
-				         '-',
+				         '个 perrs 下载 -',
 				         TorrentRendererHelper.formatDL(t),
 				         TorrentRendererHelper.formatUL(t) ].join(' ');
 			}
 			else
 			{
 				// Downloading from 2 of 3 peer(s)
-				return [ '下载中 from',
+				return [ '从',
 				         t.getPeersSendingToUs(),
-				         '总共',
+				         '个 perrs 下载 总共',
 				         fmt.countString('peer','peers',peer_count),
 				         '-',
 				         TorrentRendererHelper.formatDL(t),
@@ -197,9 +197,9 @@ TorrentRendererFull.prototype =
 		}
 
 		if (t.isSeeding())
-			return [ '上传中 to',
+			return [ '上传到',
 			         t.getPeersGettingFromUs(),
-			         '总共',
+			         'perrs 总共',
 			         fmt.countString ('peer','peers',t.getPeersConnected()),
 			         '-',
 			         TorrentRendererHelper.formatUL(t) ].join(' ');
@@ -228,7 +228,7 @@ TorrentRendererFull.prototype =
 
 		if (is_done) {
 			if (totalSize === sizeWhenDone) // seed: '698.05 MiB'
-				c = [ '已经下载 ',
+				c = [ '文件大小 ',
 					  Transmission.fmt.size(totalSize) ];
 			else // partial seed: '127.21 MiB of 698.05 MiB (18.2%)'
 				c = [ '已经下载 ',

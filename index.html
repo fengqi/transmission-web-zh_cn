@@ -2,8 +2,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=8,IE=9"><!-- ticket #4555 --> 
-		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10"><!-- ticket #4555 -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<link href="./images/favicon.ico" rel="icon" />
 		<link href="./images/favicon.png" rel="shortcut icon" />
@@ -147,8 +147,8 @@
 						<div class="title">选项</div>
 						<div class="row"><div class="key">加密模式:</div>
 						                 <div class="value"><select id="encryption">
-						                 	<option value="tolerated">允许加密</option>
-						                 	<option value="preferred">禁止加密</option>
+						                 	<option value="tolerated">关闭加密</option>
+						                 	<option value="preferred">打开加密</option>
 						                 	<option value="required">必须加密</option></select></div></div>
 						<div class="checkbox-row"><input type="checkbox" id="pex-enabled" title="PEX is a tool for exchanging peer lists with the peers you're connected to."/>
 						                          <label for="pex-enabled" title="PEX is a tool for exchanging peer lists with the peers you're connected to.">使用PEX来寻找更多peers</label></div>
@@ -162,7 +162,7 @@
 						<div class="row"><div class="key"><input type="checkbox" id="blocklist-enabled"/><label for="blocklist-enabled">启用黑名单:</label></div>
 						                 <div class="value"><input type="url" id="blocklist-url"/></div></div>
 						<div class="row"><div class="key" style="margin-top: 3px; font-size: smaller;">已经屏蔽 <span id="blocklist-size">?</span> 条记录</div>
-						                 <div class="value"><input type="button" id="blocklist-update-button" value="Update"/></div></div>
+						                 <div class="value"><input type="button" id="blocklist-update-button" value="更新"/></div></div>
 					</div>
 				</div>
 				<div id="prefs-page-network">

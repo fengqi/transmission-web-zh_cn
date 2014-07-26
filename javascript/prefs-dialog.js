@@ -104,7 +104,7 @@ function PrefsDialog(remote) {
     {
         var e = data.elements.blocklist_button;
         e.attr('disabled',!b);
-        e.val(b ? 'Update' : 'Updating...');
+        e.val(b ? '更新' : '更新中...');
     },
 
     getValue = function(e)

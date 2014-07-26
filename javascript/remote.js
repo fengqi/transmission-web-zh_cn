@@ -98,12 +98,12 @@ TransmissionRemote.prototype =
 		var o = { method: 'session-get' };
 		this.sendRequest(o, callback, context, async);
 	},
-
+	
 	checkPort: function(callback, context, async) {
 		var o = { method: 'port-test' };
 		this.sendRequest(o, callback, context, async);
 	},
-
+	
 	loadDaemonStats: function(callback, context, async) {
 		var o = { method: 'session-stats' };
 		this.sendRequest(o, callback, context, async);
@@ -160,7 +160,7 @@ TransmissionRemote.prototype =
 
 	moveTorrents: function(torrent_ids, new_location, callback, context) {
 		var remote = this;
-		this.sendTorrentSetRequests( 'torrent-set-location', torrent_ids,
+		this.sendTorrentSetRequests( 'torrent-set-location', torrent_ids, 
 			{"move": true, "location": new_location}, callback, context);
 	},
 

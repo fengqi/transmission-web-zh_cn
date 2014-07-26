@@ -45,9 +45,9 @@
 			<div id="toolbar-start" title="开始选中的种子"></div>
 			<div id="toolbar-pause" title="暂停选中的种子"></div>
 			<div id="toolbar-separator"></div>
-			<div id="toolbar-start-all" title="选中所有的种子"></div>
+			<div id="toolbar-start-all" title="开始所有的种子"></div>
 			<div id="toolbar-pause-all" title="暂停所有的种子"></div>
-			<div id="toolbar-inspector" title="信息"></div>
+			<div id="toolbar-inspector" title="切换状态"></div>
 		</div>
 
 		<div id="statusbar">
@@ -55,11 +55,11 @@
 				显示
 				<select id="filter-mode">
 					<option value="all">所有</option>
-					<option value="active">活跃</option>
+					<option value="active">活动中</option>
 					<option value="downloading">下载中</option>
 					<option value="seeding">做种中</option>
-					<option value="paused">暂停</option>
-					<option value="finished">完成</option>
+					<option value="paused">已暂停</option>
+					<option value="finished">已完成</option>
 				</select>
 				<select id="filter-tracker"></select>
 				<input type="search" id="torrent_search" placeholder="关键字" />
@@ -89,13 +89,13 @@
 			<div>
 				<div id="prefs-page-torrents">
 					<div class="prefs-section">
-						<div class="title">下载设置</div>
+						<div class="title">下载</div>
 						<div class="row"><div class="key">下载到:</div><div class="value"><input type="text" id="download-dir"/></div></div>
-						<div class="checkbox-row"><input type="checkbox" id="start-added-torrents"/><label for="start-added-torrents">添加任务后就开始下载</label></div>
+						<div class="checkbox-row"><input type="checkbox" id="start-added-torrents"/><label for="start-added-torrents">添加后立即开始</label></div>
 						<div class="checkbox-row"><input type="checkbox" id="rename-partial-files"/><label for="rename-partial-files">在未完成的文件名后面加上 &quot;.part&quot;</label></div>
 					</div>
 					<div class="prefs-section">
-						<div class="title">做种设置</div>
+						<div class="title">做种</div>
 						<div class="row"><div class="key"><input type="checkbox" id="seedRatioLimited"/><label for="seedRatioLimited">达到比例后停止做种:</label></div>
                                                                  <div class="value"><input type="text" class="numberinput" id="seedRatioLimit"/></div></div>
 						<div class="row"><div class="key"><input type="checkbox" id="idle-seeding-limit-enabled"/><label for="idle-seeding-limit-enabled">种子空闲一定时间后停止做种(分钟):</label></div>
@@ -104,23 +104,23 @@
 				</div>
 				<div id="prefs-page-speed">
 					<div class="prefs-section">
-						<div class="title">常规速度限制</div>
+						<div class="title">限速</div>
 						<div class="row"><div class="key"><input type="checkbox" id="speed-limit-up-enabled"/><label for="speed-limit-up-enabled">上传 (kB/秒):</label></div>
                                                                  <div class="value"><input type="text" class="numberinput" id="speed-limit-up"/></div></div>
 						<div class="row"><div class="key"><input type="checkbox" id="speed-limit-down-enabled"/><label for="speed-limit-down-enabled">下载 (kB/秒):</label></div>
                                                                  <div class="value"><input type="text" class="numberinput" id="speed-limit-down"/></div></div>
 					</div>
 					<div class="prefs-section">
-						<div class="title"><div id="alternative-speed-limits-title">计划速度限制</div></div>
+						<div class="title"><div id="alternative-speed-limits-title">计划限制</div></div>
 						<div class="row" style="font-size: smaller; padding-bottom: 4px;">在以下时间使用计划速度限制(覆盖普通速度限制)</div>
-						<div class="row"><div class="key">上传限制 (kB/秒):</div>
+						<div class="row"><div class="key">上传 (kB/秒):</div>
                                                                  <div class="value"><input type="text" class="numberinput" id="alt-speed-up"/></div></div>
-						<div class="row"><div class="key">下载限制 (kB/秒):</div>
+						<div class="row"><div class="key">下载 (kB/秒):</div>
                                                                  <div class="value"><input type="text" class="numberinput" id="alt-speed-down"/></div></div>
 						<div class="checkbox-row"><input type="checkbox" id="alt-speed-time-enabled"/><label for="alt-speed-time-enabled">指定时间</label></div>
-						<div class="row"><div class="key">起始时间:</div>
+						<div class="row"><div class="key">从:</div>
 						                 <div class="value"><select id="alt-speed-time-begin"></select></div></div>
-						<div class="row"><div class="key">结束时间:</div>
+						<div class="row"><div class="key">到:</div>
 						                 <div class="value"><select id="alt-speed-time-end"></select></div></div>
 						<div class="row"><div class="key"><label for="alt-speed-time-day">在这些天:</label></div>
 						                 <div class="value"><select id="alt-speed-time-day">
@@ -169,7 +169,7 @@
 				<div id="prefs-page-network">
 					<div class="prefs-section">
 						<div class="title">监听端口</div>
-						<div class="row"><div class="key"><label for="peer-port">传入TCP端口(一般是51413):</label></div>
+						<div class="row"><div class="key"><label for="peer-port">监听TCP端口(一般是51413):</label></div>
 						                 <div class="value"><input type="text" class="numberinput" id="peer-port"/></div></div>
 						<div class="row"><div class="key">&nbsp;</div>
 						                 <div class="value"><span id="port-label">状态: 未知</span></div></div>
@@ -189,10 +189,10 @@
 
 			<div id="inspector-tabs-wrapper">
 			<div id="inspector-tabs">
-				<div class="inspector-tab selected" id="inspector-tab-info" title="详情"><a href="#info"></a></div>
-				<div class="inspector-tab" id="inspector-tab-peers" title="Peers"><a href="#peers"></a></div>
-				<div class="inspector-tab" id="inspector-tab-trackers" title="Trackers服务器"><a href="#trackers"></a></div>
-				<div class="inspector-tab" id="inspector-tab-files" title="文件"><a href="#files"></a></div>
+				<div class="inspector-tab selected" id="inspector-tab-info" title="Info"><a href="#info"></a></div>
+                <div class="inspector-tab" id="inspector-tab-peers" title="Peers"><a href="#peers"></a></div>
+                <div class="inspector-tab" id="inspector-tab-trackers" title="Trackers"><a href="#trackers"></a></div>
+                <div class="inspector-tab" id="inspector-tab-files" title="Files"><a href="#files"></a></div>
 			</div><!-- inspector-tabs -->
 			</div><!-- inspector-tabs-wrapper -->
 

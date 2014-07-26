@@ -166,37 +166,40 @@ TorrentRendererFull.prototype =
 				// Downloading from 2 of 3 peer(s) and 2 webseed(s)
 				return [ '下载中 from',
 				         t.getPeersSendingToUs(),
-				         'of',
+				         '总共',
 				         fmt.countString('peer','peers',peer_count),
 				         'and',
-						 fmt.countString('web seed','web seeds',webseed_count),
-						 TorrentRendererHelper.formatDL(t),
-						 TorrentRendererHelper.formatUL(t) ].join(' ');
+				         fmt.countString('web seed','web seeds',webseed_count),
+				         '-',
+				         TorrentRendererHelper.formatDL(t),
+				         TorrentRendererHelper.formatUL(t) ].join(' ');
 			}
 			else if (webseed_count)
 			{
 				// Downloading from 2 webseed(s)
 				return [ '下载中 from',
 				         fmt.countString('web seed','web seeds',webseed_count),
-						 TorrentRendererHelper.formatDL(t),
-						 TorrentRendererHelper.formatUL(t) ].join(' ');
+				         '-',
+				         TorrentRendererHelper.formatDL(t),
+				         TorrentRendererHelper.formatUL(t) ].join(' ');
 			}
 			else
 			{
 				// Downloading from 2 of 3 peer(s)
 				return [ '下载中 from',
 				         t.getPeersSendingToUs(),
-				         'of',
+				         '总共',
 				         fmt.countString('peer','peers',peer_count),
-						 TorrentRendererHelper.formatDL(t),
-						 TorrentRendererHelper.formatUL(t) ].join(' ');
+				         '-',
+				         TorrentRendererHelper.formatDL(t),
+				         TorrentRendererHelper.formatUL(t) ].join(' ');
 			}
 		}
 
 		if (t.isSeeding())
 			return [ '上传中 to',
 			         t.getPeersGettingFromUs(),
-			         'of',
+			         '总共',
 			         fmt.countString ('peer','peers',t.getPeersConnected()),
 			         '-',
 			         TorrentRendererHelper.formatUL(t) ].join(' ');
@@ -395,13 +398,6 @@ TorrentRow.prototype =
 	},
 	isSelected: function() {
 		return this.getElement().className.indexOf('selected') !== -1;
-	},
-	setSelected: function(flag) {
-		$(this.getElement()).toggleClass('selected', flag);
-	},
-
-	getToggleRunningButton: function() {
-		return this.getElement()._toggle_running_button;
 	},
 
 	getTorrent: function() {

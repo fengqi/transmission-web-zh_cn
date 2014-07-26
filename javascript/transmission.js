@@ -87,7 +87,7 @@ Transmission.prototype =
 
 		if (this.isMenuEnabled)
 			this.createSettingsMenu();
-
+ 
 		e = {};
 		e.torrent_list              = $('#torrent_list')[0];
 		e.toolbar_buttons           = $('#toolbar ul li');
@@ -660,7 +660,7 @@ Transmission.prototype =
 
 			case 'tipjar':
 				window.open('http://www.transmissionbt.com/donate.php');
-				break;
+				break;	
 
 			case 'unlimited_download_rate':
 				o = {};
@@ -916,9 +916,9 @@ Transmission.prototype =
 		} else {
 			var ids = this.getTorrentIds(torrents);
 			this.remote.moveTorrents(
-				ids,
-				$("input#torrent_path").val(),
-				this.refreshTorrents,
+				ids, 
+				$("input#torrent_path").val(), 
+				this.refreshTorrents, 
 				this);
 			$('#move_container').hide();
 		}
@@ -1400,8 +1400,8 @@ Transmission.prototype =
 		e = []
 		for (i=0; row=rows[i]; ++i)
 			e.push(row.getElement());
-		$(e).filter(":odd").addClass('even');
-		$(e).filter(":even").removeClass('even');
+		$(e).filter(":odd").addClass('even'); 
+		$(e).filter(":even").removeClass('even'); 
 
 		// sync gui
 		this.updateStatusbar();

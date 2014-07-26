@@ -82,14 +82,6 @@ function Inspector(controller) {
     *****  GENERAL INFO PAGE
     ****/
 
-    accumulateString = function (oldVal, newVal) {
-        if (!oldVal || !oldVal.length)
-            return newVal;
-        if (oldVal === newVal)
-            return newVal;
-        return 'Mixed';
-    },
-
     updateInfoPage = function () {
         var torrents = data.torrents,
             e = data.elements,
@@ -224,7 +216,7 @@ function Inspector(controller) {
             if(torrents.length == 1) {
                 d = torrents[0].getDownloadedEver();
                 u = torrents[0].getUploadedEver();
-
+                                
                 if (d == 0)
                     d = torrents[0].getHaveValid();
             }
@@ -403,7 +395,7 @@ function Inspector(controller) {
             }
         }
         if(!str)
-            str = none;
+            str = none;  
         setTextContent(e.comment_lb, str);
 
         //
@@ -544,11 +536,11 @@ function Inspector(controller) {
             addNodeToView (tor, div, sub, i++);
         if (sub.children)
             for (key in sub.children)
-                i = addSubtreeToView (tor, div, sub.children[key]);
+                i = addSubtreeToView (tor, div, sub.children[key]);  
         parent.appendChild(div);
         return i;
     },
-
+                
     updateFilesPage = function() {
         var i, n, tor, fragment, tree,
             file_list = data.elements.file_list,
@@ -727,7 +719,7 @@ function Inspector(controller) {
                     tier = tracker.tier;
 
                     html.push('<div class="inspector_group_label">',
-                          'Tier ', tier, '</div>',
+                          'Tier ', tier+1, '</div>',
                           '<ul class="tier_list">');
                 }
 
@@ -737,7 +729,7 @@ function Inspector(controller) {
                 lastScrapeStatusHash = lastScrapeStatus(tracker);
                 parity = (j%2) ? 'odd' : 'even';
                 html.push('<li class="inspector_tracker_entry ', parity, '"><div class="tracker_host" title="', sanitizeText(tracker.announce), '">',
-                      sanitizeText(tracker.host), '</div>',
+                      sanitizeText(tracker.host || tracker.announce), '</div>',
                       '<div class="tracker_activity">',
                       '<div>', lastAnnounceStatusHash['label'], ': ', lastAnnounceStatusHash['value'], '</div>',
                       '<div>', announceState, '</div>',

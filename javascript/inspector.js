@@ -216,7 +216,7 @@ function Inspector(controller) {
             if(torrents.length == 1) {
                 d = torrents[0].getDownloadedEver();
                 u = torrents[0].getUploadedEver();
-                                
+
                 if (d == 0)
                     d = torrents[0].getHaveValid();
             }
@@ -395,7 +395,7 @@ function Inspector(controller) {
             }
         }
         if(!str)
-            str = none;  
+            str = none;
         setTextContent(e.comment_lb, str);
 
         //
@@ -536,11 +536,11 @@ function Inspector(controller) {
             addNodeToView (tor, div, sub, i++);
         if (sub.children)
             for (key in sub.children)
-                i = addSubtreeToView (tor, div, sub.children[key]);  
+                i = addSubtreeToView (tor, div, sub.children[key]);
         parent.appendChild(div);
         return i;
     },
-                
+
     updateFilesPage = function() {
         var i, n, tor, fragment, tree,
             file_list = data.elements.file_list,

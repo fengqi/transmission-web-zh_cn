@@ -131,7 +131,7 @@ Torrent.prototype =
 	setField: function(o, name, value)
 	{
 		var i, observer;
-		
+
 		if (o[name] === value)
 			return false;
 		if (o == this.fields && this.fieldObservers[name] && this.fieldObservers[name].length) {

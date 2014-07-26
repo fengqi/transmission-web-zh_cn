@@ -15,9 +15,9 @@ $(document).ready(function () {
 		var title = (event.type == 'downloadComplete' ? 'Download' : 'Seeding') + ' complete',
 			content = torrent.getName(),
 			notification;
-	
+
 		notification = window.webkitNotifications.createNotification('style/transmission/images/logo.png', title, content);
-		notification.show(); 
+		notification.show();
 		setTimeout(function () {
 		  notification.cancel();
 		}, 5000);

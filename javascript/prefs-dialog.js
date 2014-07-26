@@ -76,7 +76,7 @@ function PrefsDialog(remote) {
     onPortChecked = function(response)
     {
         var is_open = response['arguments']['port-is-open'],
-            text = 'Port is <b>' + (is_open ? 'Open' : 'Closed') + '</b>',
+            text = '状态: <b>' + (is_open ? '打开' : '关闭') + '</b>',
             e = data.elements.root.find('#port-label');
         setInnerHTML(e[0],text);
     },
@@ -143,7 +143,7 @@ function PrefsDialog(remote) {
         o[ev.target.id] = getValue($(ev.target));
         data.remote.savePrefs(o);
     },
-        
+
     /* these two callbacks are for controls whose changes can't be applied
        immediately -- like a text entry field -- because it takes many
        change events for the user to get to the desired result */

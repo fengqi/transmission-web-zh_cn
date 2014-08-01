@@ -15,9 +15,9 @@ $(document).ready(function () {
 		var title = (event.type == 'downloadComplete' ? 'Download' : 'Seeding') + ' complete',
 			content = torrent.getName(),
 			notification;
-
+	
 		notification = window.webkitNotifications.createNotification('style/transmission/images/logo.png', title, content);
-		notification.show();
+		notification.show(); 
 		setTimeout(function () {
 		  notification.cancel();
 		}, 5000);
@@ -25,7 +25,7 @@ $(document).ready(function () {
   });
 
   function updateMenuTitle() {
-    toggle.html((notificationsEnabled ? '关闭' : '开启') + '通知');
+    toggle.html((notificationsEnabled ? 'Disable' : 'Enable') + ' Notifications');
   }
 
   Notifications.toggle = function () {

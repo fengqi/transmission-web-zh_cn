@@ -60,11 +60,11 @@ function Inspector(controller) {
 
         // update the name, which is shown on all the pages
         if (!torrents || !torrents.length)
-            name = '没有选择';
+            name = 'No Selection';
         else if(torrents.length === 1)
             name = torrents[0].getName();
         else
-            name = '' + torrents.length+' 个种子被选择';
+            name = '' + torrents.length+' Transfers Selected';
         setTextContent(e.name_lb, name || na);
 
         // update the visible page
@@ -86,9 +86,9 @@ function Inspector(controller) {
         var torrents = data.torrents,
             e = data.elements,
             fmt = Transmission.fmt,
-            none = '没有',
-            mixed = '多个',
-            unknown = '未知',
+            none = 'None',
+            mixed = 'Mixed',
+            unknown = 'Unknown',
             isMixed, allPaused, allFinished,
             str,
             baseline, it, s, i, t,
@@ -106,6 +106,7 @@ function Inspector(controller) {
             creator, mixed_creator,
             date, mixed_date,
             v, u, f, d, pct,
+            uri,
             now = Date.now();
 
         //
@@ -132,9 +133,9 @@ function Inspector(controller) {
             if( isMixed )
                 str = mixed;
             else if( allFinished )
-                str = '已完成';
+                str = 'Finished';
             else if( allPaused )
-                str = '已暂停';
+                str = 'Paused';
             else
                 str = torrents[0].getStateString();
         }
@@ -170,7 +171,7 @@ function Inspector(controller) {
             else if( !haveUnverified )
                 str = fmt.size(haveVerified) + ' of ' + fmt.size(sizeWhenDone) + ' (' + str +'%)';
             else
-                str = fmt.size(haveVerified) + ' of ' + fmt.size(sizeWhenDone) + ' (' + str +'%), ' + fmt.size(haveUnverified) + ' 未校验';
+                str = fmt.size(haveVerified) + ' of ' + fmt.size(sizeWhenDone) + ' (' + str +'%), ' + fmt.size(haveUnverified) + ' Unverified';
         }
         setTextContent(e.have_lb, str);
 
@@ -216,7 +217,7 @@ function Inspector(controller) {
             if(torrents.length == 1) {
                 d = torrents[0].getDownloadedEver();
                 u = torrents[0].getUploadedEver();
-
+                                
                 if (d == 0)
                     d = torrents[0].getHaveValid();
             }
@@ -226,7 +227,7 @@ function Inspector(controller) {
                     u += t.getUploadedEver();
                 }
             }
-            str = fmt.size(u) + ' (分享率: ' + fmt.ratioString( Math.ratio(u,d))+')';
+            str = fmt.size(u) + ' (Ratio: ' + fmt.ratioString( Math.ratio(u,d))+')';
         }
         setTextContent(e.uploaded_lb, str);
 
@@ -395,8 +396,14 @@ function Inspector(controller) {
             }
         }
         if(!str)
-            str = none;
-        setTextContent(e.comment_lb, str);
+            str = none;  
+        uri = parseUri(str);
+        if (uri.protocol == 'http' || uri.parseUri == 'https') {
+            str = encodeURI(str);
+            setInnerHTML(e.comment_lb, '<a href="' + str + '" target="_blank" >' + str + '</a>');
+        }
+        else
+            setTextContent(e.comment_lb, str);
 
         //
         //  origin
@@ -418,11 +425,11 @@ function Inspector(controller) {
             if(mixed_creator && mixed_date)
                 str = mixed;
             else if(mixed_date && creator.length)
-                str = '创建自 ' + creator;
+                str = 'Created by ' + creator;
             else if(mixed_creator && date)
-                str = '创建于 ' + (new Date(date*1000)).toDateString();
+                str = 'Created on ' + (new Date(date*1000)).toDateString();
             else
-                str = '创建自 ' + creator + ' 在 ' + (new Date(date*1000)).toDateString();
+                str = 'Created by ' + creator + ' on ' + (new Date(date*1000)).toDateString();
         }
         setTextContent(e.origin_lb, str);
 
@@ -536,11 +543,11 @@ function Inspector(controller) {
             addNodeToView (tor, div, sub, i++);
         if (sub.children)
             for (key in sub.children)
-                i = addSubtreeToView (tor, div, sub.children[key]);
+                i = addSubtreeToView (tor, div, sub.children[key]);  
         parent.appendChild(div);
         return i;
     },
-
+                
     updateFilesPage = function() {
         var i, n, tor, fragment, tree,
             file_list = data.elements.file_list,
@@ -596,12 +603,12 @@ function Inspector(controller) {
             html.push('<table class="peer_list">',
                    '<tr class="inspector_peer_entry even">',
                    '<th class="encryptedCol"></th>',
-                   '<th class="upCol">上传</th>',
-                   '<th class="downCol">下载</th>',
+                   '<th class="upCol">Up</th>',
+                   '<th class="downCol">Down</th>',
                    '<th class="percentCol">%</th>',
-                   '<th class="statusCol">状态</th>',
-                   '<th class="addressCol">地址</th>',
-                   '<th class="clientCol">客户端</th>',
+                   '<th class="statusCol">Status</th>',
+                   '<th class="addressCol">Address</th>',
+                   '<th class="clientCol">Client</th>',
                    '</tr>');
             for (i=0; peer=peers[i]; ++i) {
                 parity = (i%2) ? 'odd' : 'even';
@@ -637,10 +644,10 @@ function Inspector(controller) {
                 if (timeUntilAnnounce < 0) {
                     timeUntilAnnounce = 0;
                 }
-                s = '下一次汇报间隔 ' + Transmission.fmt.timeInterval(timeUntilAnnounce);
+                s = 'Next announce in ' + Transmission.fmt.timeInterval(timeUntilAnnounce);
                 break;
             case Torrent._TrackerQueued:
-                s = '汇报正在排队';
+                s = 'Announce is queued';
                 break;
             case Torrent._TrackerInactive:
                 s = tracker.isBackup ?
@@ -648,23 +655,23 @@ function Inspector(controller) {
                     'Announce not scheduled';
                 break;
             default:
-                s = '未知汇报状态: ' + tracker.announceState;
+                s = 'unknown announce state: ' + tracker.announceState;
         }
         return s;
     },
 
     lastAnnounceStatus = function(tracker) {
 
-        var lastAnnounceLabel = '最后一次汇报时间',
+        var lastAnnounceLabel = 'Last Announce',
             lastAnnounce = [ 'N/A' ],
         lastAnnounceTime;
 
         if (tracker.hasAnnounced) {
             lastAnnounceTime = Transmission.fmt.timestamp(tracker.lastAnnounceTime);
             if (tracker.lastAnnounceSucceeded) {
-                lastAnnounce = [ lastAnnounceTime, ' (得到',  Transmission.fmt.countString('peer','peers',tracker.lastAnnouncePeerCount), ')' ];
+                lastAnnounce = [ lastAnnounceTime, ' (got ',  Transmission.fmt.countString('peer','peers',tracker.lastAnnouncePeerCount), ')' ];
             } else {
-                lastAnnounceLabel = '汇报时错误';
+                lastAnnounceLabel = 'Announce error';
                 lastAnnounce = [ (tracker.lastAnnounceResult ? (tracker.lastAnnounceResult + ' - ') : ''), lastAnnounceTime ];
             }
         }
@@ -673,7 +680,7 @@ function Inspector(controller) {
 
     lastScrapeStatus = function(tracker) {
 
-        var lastScrapeLabel = '最近汇报',
+        var lastScrapeLabel = 'Last Scrape',
             lastScrape = 'N/A',
         lastScrapeTime;
 
@@ -682,7 +689,7 @@ function Inspector(controller) {
             if (tracker.lastScrapeSucceeded) {
                 lastScrape = lastScrapeTime;
             } else {
-                lastScrapeLabel = '汇报错误';
+                lastScrapeLabel = 'Scrape error';
                 lastScrape = (tracker.lastScrapeResult ? tracker.lastScrapeResult + ' - ' : '') + lastScrapeTime;
             }
         }
@@ -735,9 +742,9 @@ function Inspector(controller) {
                       '<div>', announceState, '</div>',
                       '<div>', lastScrapeStatusHash['label'], ': ', lastScrapeStatusHash['value'], '</div>',
                       '</div><table class="tracker_stats">',
-                      '<tr><th>做种中:</th><td>', (tracker.seederCount > -1 ? tracker.seederCount : na), '</td></tr>',
-                      '<tr><th>下载中:</th><td>', (tracker.leecherCount > -1 ? tracker.leecherCount : na), '</td></tr>',
-                      '<tr><th>已完成:</th><td>', (tracker.downloadCount > -1 ? tracker.downloadCount : na), '</td></tr>',
+                      '<tr><th>Seeders:</th><td>', (tracker.seederCount > -1 ? tracker.seederCount : na), '</td></tr>',
+                      '<tr><th>Leechers:</th><td>', (tracker.leecherCount > -1 ? tracker.leecherCount : na), '</td></tr>',
+                      '<tr><th>Downloads:</th><td>', (tracker.downloadCount > -1 ? tracker.downloadCount : na), '</td></tr>',
                       '</table></li>');
             }
             if (tier !== -1) // close last tier

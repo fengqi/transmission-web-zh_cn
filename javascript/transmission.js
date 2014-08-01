@@ -53,6 +53,10 @@ Transmission.prototype =
 		$('#upload_confirm_button').click($.proxy(this.confirmUploadClicked,this));
 		$('#upload_cancel_button').click($.proxy(this.hideUploadDialog,this));
 
+		$('#rename_confirm_button').click($.proxy(this.confirmRenameClicked,this));
+		$('#rename_cancel_button').click($.proxy(this.hideRenameDialog,this));
+
+
 		$('#move_confirm_button').click($.proxy(this.confirmMoveClicked,this));
 		$('#move_cancel_button').click($.proxy(this.hideMoveDialog,this));
 
@@ -86,7 +90,7 @@ Transmission.prototype =
 
 		if (this.isMenuEnabled)
 			this.createSettingsMenu();
-
+ 
 		e = {};
 		e.torrent_list              = $('#torrent_list')[0];
 		e.toolbar_buttons           = $('#toolbar ul li');
@@ -183,6 +187,7 @@ Transmission.prototype =
 			context_remove:               function() { tr.removeSelectedTorrents(); },
 			context_removedata:           function() { tr.removeSelectedTorrentsAndData(); },
 			context_verify:               function() { tr.verifySelectedTorrents(); },
+			context_rename:               function() { tr.renameSelectedTorrents(); },
 			context_reannounce:           function() { tr.reannounceSelectedTorrents(); },
 			context_move_top:             function() { tr.moveTop(); },
 			context_move_up:              function() { tr.moveUp(); },
@@ -242,10 +247,10 @@ Transmission.prototype =
 		{
 			e = $('label#add-dialog-folder-label');
 			if (bytes > 0)
-				str = '  <i>(' + Transmission.fmt.size(bytes) + ' 可用)</i>';
+				str = '  <i>(' + Transmission.fmt.size(bytes) + ' Free)</i>';
 			else
 				str = '';
-			e.html ('目标文件夹(下载到)' + str + ' :');
+			e.html ('Destination folder' + str + ':');
 		}
 	},
 
@@ -572,6 +577,17 @@ Transmission.prototype =
 		this.hideUploadDialog();
 	},
 
+	hideRenameDialog: function() {
+		$('body.open_showing').removeClass('open_showing');
+		$('#rename_container').hide();
+	},
+
+	confirmRenameClicked: function() {
+		var torrents = this.getSelectedTorrents();
+		this.renameTorrent(torrents[0], $('input#torrent_rename_name').attr('value'));
+		this.hideRenameDialog();
+	},
+
 	removeClicked: function(ev) {
 		if (this.isButtonEnabled(ev)) {
 			this.removeSelectedTorrents();
@@ -673,7 +689,7 @@ Transmission.prototype =
 				o = 'Transmission ' + this.serverVersion;
 				$('#about-dialog #about-title').html(o);
 				$('#about-dialog').dialog({
-					title: '关于',
+					title: 'About',
 					show: 'fade',
 					hide: 'fade'
 				});
@@ -685,7 +701,7 @@ Transmission.prototype =
 
 			case 'tipjar':
 				window.open('http://www.transmissionbt.com/donate.php');
-				break;
+				break;	
 
 			case 'unlimited_download_rate':
 				o = {};
@@ -929,7 +945,7 @@ Transmission.prototype =
 
 			jQuery.each (fileInput[0].files, function(i,file) {
 				var reader = new FileReader();
-				reader.onload = function(e) {
+				reader.onload = function(e) { 
 					var contents = e.target.result;
 					var key = "base64,"
 					var index = contents.indexOf (key);
@@ -954,7 +970,7 @@ Transmission.prototype =
 
 			var url = $('#torrent_upload_url').val();
 			if (url != '') {
-				if (url.match(/^[0-9a-f]{40}$/i))
+				if (url.match(/^[0-9a-f]{40}$/i)) 
 					url = 'magnet:?xt=urn:btih:'+url;
 				var o = {
 					'method': 'torrent-add',
@@ -966,7 +982,7 @@ Transmission.prototype =
 				};
 				remote.sendRequest (o, function(response) {
 					if (response.result != 'success')
-						alert ('Error adding "' + file.name + '": ' + response.result);
+						alert ('Error adding "' + url + '": ' + response.result);
 				});
 			}
 		}
@@ -986,9 +1002,9 @@ Transmission.prototype =
 		} else {
 			var ids = this.getTorrentIds(torrents);
 			this.remote.moveTorrents(
-				ids,
-				$("input#torrent_path").val(),
-				this.refreshTorrents,
+				ids, 
+				$("input#torrent_path").val(), 
+				this.refreshTorrents, 
 				this);
 			$('#move_container').hide();
 		}
@@ -1016,15 +1032,15 @@ Transmission.prototype =
 		if (torrents.length === 1)
 		{
 			var torrent = torrents[0],
-			    header = '删除 ' + torrent.getName() + '?',
-			    message = '一旦删除后，你需要再次上传种子文件才能继续下载。是否删除所选种子？';
-			dialog.confirm(header, message, '删除', 'transmission.removeTorrents', torrents);
+			    header = 'Remove ' + torrent.getName() + '?',
+			    message = 'Once removed, continuing the transfer will require the torrent file. Are you sure you want to remove it?';
+			dialog.confirm(header, message, 'Remove', 'transmission.removeTorrents', torrents);
 		}
 		else
 		{
-			var header = '删除所选的 ' + torrents.length + ' 个种子？',
-			    message = '一旦删除后，你需要再次下载种子文件才能继续使用。是否删除所选种子？';
-			dialog.confirm(header, message, '删除', 'transmission.removeTorrents', torrents);
+			var header = 'Remove ' + torrents.length + ' transfers?',
+			    message = 'Once removed, continuing the transfers will require the torrent files. Are you sure you want to remove them?';
+			dialog.confirm(header, message, 'Remove', 'transmission.removeTorrents', torrents);
 		}
 	},
 
@@ -1033,15 +1049,15 @@ Transmission.prototype =
 		if (torrents.length === 1)
 		{
 			var torrent = torrents[0],
-			    header = '删除种子 ' + torrent.getName() + ' 和下载的数据？',
-			    message = '所有这个种子及下载的文件数据都会被删除，你确定要删除吗？';
-			dialog.confirm(header, message, '删除', 'transmission.removeTorrentsAndData', torrents);
+			    header = 'Remove ' + torrent.getName() + ' and delete data?',
+			    message = 'All data downloaded for this torrent will be deleted. Are you sure you want to remove it?';
+			dialog.confirm(header, message, 'Remove', 'transmission.removeTorrentsAndData', torrents);
 		}
 		else
 		{
-			var header = '删除所选的 ' + torrents.length + ' 个种子和下载的数据？',
-			    message = '所有这些种子及下载的文件数据都会被删除，你确定要删除吗？';
-			dialog.confirm(header, message, '删除', 'transmission.removeTorrentsAndData', torrents);
+			var header = 'Remove ' + torrents.length + ' transfers and delete data?',
+			    message = 'All data downloaded for these torrents will be deleted. Are you sure you want to remove them?';
+			dialog.confirm(header, message, 'Remove', 'transmission.removeTorrentsAndData', torrents);
 		}
 	},
 
@@ -1052,6 +1068,36 @@ Transmission.prototype =
 
 	removeTorrentsAndData: function(torrents) {
 		this.remote.removeTorrentsAndData(torrents);
+	},
+
+	promptToRenameTorrent: function(torrent) {
+		$('body').addClass('open_showing');
+		$('input#torrent_rename_name').attr('value', torrent.getName());
+		$('#rename_container').show();
+		$('#torrent_rename_name').focus();
+	},
+
+	renameSelectedTorrents: function() {
+		var torrents = this.getSelectedTorrents();
+		if (torrents.length != 1)
+			dialog.alert("Renaming", "You can rename only one torrent at a time.", "Ok");
+		else
+			this.promptToRenameTorrent(torrents[0]);
+	},
+
+	onTorrentRenamed: function(response) {
+		var torrent;
+		if ((response.result === 'success') &&
+		    (response.arguments) &&
+		    ((torrent = this._torrents[response.arguments.id])))
+		{
+			torrent.refresh(response.arguments);
+		}
+	},
+
+	renameTorrent: function (torrent, newname) {
+		var oldpath = torrent.getName();
+		this.remote.renameTorrent([torrent.getId()], oldpath, newname, this.onTorrentRenamed, this);
 	},
 
 	verifySelectedTorrents: function() {
@@ -1157,12 +1203,12 @@ Transmission.prototype =
 		{
 			b = o[RPC._TurtleState];
 			e = $('#turtle-button');
-			text = [ '点击 ', (b?'关闭':'打开'),
-			         ' 临时限速 (',
+			text = [ 'Click to ', (b?'disable':'enable'),
+			         ' Temporary Speed Limits (',
 			         fmt.speed(o[RPC._TurtleUpSpeedLimit]),
-			         ' 上传,',
+			         ' up,',
 			         fmt.speed(o[RPC._TurtleDownSpeedLimit]),
-			         ' 下载)' ].join('');
+			         ' down)' ].join('');
 			e.toggleClass('selected', b);
 			e.attr('title', text);
 		}
@@ -1174,7 +1220,7 @@ Transmission.prototype =
 			limited = o[RPC._DownSpeedLimited];
 
 			e = menu.find('#limited_download_rate');
-                        e.html('限速 (' + fmt.speed(limit) + ')');
+                        e.html('Limit (' + fmt.speed(limit) + ')');
 
                         if (!limited)
                         	e = menu.find('#unlimited_download_rate');
@@ -1188,7 +1234,7 @@ Transmission.prototype =
 			limited = o[RPC._UpSpeedLimited];
 
 			e = menu.find('#limited_upload_rate');
-                        e.html('限速 (' + fmt.speed(limit) + ')');
+                        e.html('Limit (' + fmt.speed(limit) + ')');
 
                         if (!limited)
                         	e = menu.find('#unlimited_upload_rate');
@@ -1238,9 +1284,9 @@ Transmission.prototype =
 
 		// build the new html
 		if (!this.filterTracker)
-			str = '<option value="all" selected="selected">所有</option>';
+			str = '<option value="all" selected="selected">All</option>';
 		else
-			str = '<option value="all">所有</option>';
+			str = '<option value="all">All</option>';
 		for (i=0; name=names[i]; ++i) {
 			o = trackers[name];
 			str += '<option value="' + o.domain + '"';
@@ -1470,8 +1516,8 @@ Transmission.prototype =
 		e = []
 		for (i=0; row=rows[i]; ++i)
 			e.push(row.getElement());
-		$(e).filter(":odd").addClass('even');
-		$(e).filter(":even").removeClass('even');
+		$(e).filter(":odd").addClass('even'); 
+		$(e).filter(":even").removeClass('even'); 
 
 		// sync gui
 		this.updateStatusbar();

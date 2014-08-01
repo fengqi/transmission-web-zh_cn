@@ -57,19 +57,21 @@ TransmissionRemote.prototype =
 					? request.responseText.trim().replace(/(<([^>]+)>)/ig,"")
 					: "";
 		if (!remote._error.length)
-			remote._error = '服务器未响应';
+			remote._error = 'Server not responding';
 
-		dialog.confirm('连接已断开',
-			'无法连接到服务器. 您可尝试刷新页面来重新连接到服务器.',
-			'详情',
+		dialog.confirm('Connection Failed',
+			'Could not connect to the server. You may need to reload the page to reconnect.',
+			'Details',
 			'alert(remote._error);',
 			null,
-			'忽略');
+			'Dismiss');
 		remote._controller.togglePeriodicSessionRefresh(false);
 	},
 
 	appendSessionId: function(XHR) {
-		XHR.setRequestHeader('X-Transmission-Session-Id', this._token);
+		if (this._token) {
+			XHR.setRequestHeader('X-Transmission-Session-Id', this._token);
+		}
 	},
 
 	sendRequest: function(data, callback, context, async) {
@@ -98,10 +100,19 @@ TransmissionRemote.prototype =
 		var o = { method: 'session-get' };
 		this.sendRequest(o, callback, context, async);
 	},
-
+	
 	checkPort: function(callback, context, async) {
 		var o = { method: 'port-test' };
 		this.sendRequest(o, callback, context, async);
+	},
+
+	renameTorrent: function(torrentIds, oldpath, newname, callback, context) {
+		var o = { method: 'torrent-rename-path',
+                          arguments: { 'ids': torrentIds,
+                                       'path': oldpath,
+                                       'name': newname }
+		};
+		this.sendRequest(o, callback, context);
 	},
 
 	loadDaemonStats: function(callback, context, async) {
@@ -172,7 +183,7 @@ TransmissionRemote.prototype =
 
 	moveTorrents: function(torrent_ids, new_location, callback, context) {
 		var remote = this;
-		this.sendTorrentSetRequests( 'torrent-set-location', torrent_ids,
+		this.sendTorrentSetRequests( 'torrent-set-location', torrent_ids, 
 			{"move": true, "location": new_location}, callback, context);
 	},
 

@@ -164,9 +164,9 @@ TorrentRendererFull.prototype =
 			if (webseed_count && peer_count)
 			{
 				// Downloading from 2 of 3 peer(s) and 2 webseed(s)
-				return [ '从',
+				return [ 'Downloading from',
 				         t.getPeersSendingToUs(),
-				         '个 perrs 下载 总共',
+				         'of',
 				         fmt.countString('peer','peers',peer_count),
 				         'and',
 				         fmt.countString('web seed','web seeds',webseed_count),
@@ -177,18 +177,18 @@ TorrentRendererFull.prototype =
 			else if (webseed_count)
 			{
 				// Downloading from 2 webseed(s)
-				return [ '从',
+				return [ 'Downloading from',
 				         fmt.countString('web seed','web seeds',webseed_count),
-				         '个 perrs 下载 -',
+				         '-',
 				         TorrentRendererHelper.formatDL(t),
 				         TorrentRendererHelper.formatUL(t) ].join(' ');
 			}
 			else
 			{
 				// Downloading from 2 of 3 peer(s)
-				return [ '从',
+				return [ 'Downloading from',
 				         t.getPeersSendingToUs(),
-				         '个 perrs 下载 总共',
+				         'of',
 				         fmt.countString('peer','peers',peer_count),
 				         '-',
 				         TorrentRendererHelper.formatDL(t),
@@ -197,15 +197,15 @@ TorrentRendererFull.prototype =
 		}
 
 		if (t.isSeeding())
-			return [ '上传到',
+			return [ 'Seeding to',
 			         t.getPeersGettingFromUs(),
-			         'perrs 总共',
+			         'of',
 			         fmt.countString ('peer','peers',t.getPeersConnected()),
 			         '-',
 			         TorrentRendererHelper.formatUL(t) ].join(' ');
 
 		if (t.isChecking())
-			return [ '正在校验本地数据 (',
+			return [ 'Verifying local data (',
 			         Transmission.fmt.percentString(100.0 * t.getRecheckProgress()),
 			         '% tested)' ].join('');
 
@@ -215,8 +215,11 @@ TorrentRendererFull.prototype =
 	getProgressDetails: function(controller, t)
 	{
 		if (t.needsMetaData()) {
+			var MetaDataStatus = "retrieving";
+			if (t.isStopped())
+				MetaDataStatus = "needs";
 			var percent = 100 * t.getMetadataPercentComplete();
-			return [ "Magnetized transfer - retrieving metadata (",
+			return [ "Magnetized transfer - " + MetaDataStatus + " metadata (",
 			         Transmission.fmt.percentString(percent),
 			         "%)" ].join('');
 		}
@@ -228,24 +231,21 @@ TorrentRendererFull.prototype =
 
 		if (is_done) {
 			if (totalSize === sizeWhenDone) // seed: '698.05 MiB'
-				c = [ '文件大小 ',
-					  Transmission.fmt.size(totalSize) ];
+				c = [ Transmission.fmt.size(totalSize) ];
 			else // partial seed: '127.21 MiB of 698.05 MiB (18.2%)'
-				c = [ '已经下载 ',
-			          Transmission.fmt.size(sizeWhenDone),
-				      ' 总共 ',
+				c = [ Transmission.fmt.size(sizeWhenDone),
+				      ' of ',
 				      Transmission.fmt.size(t.getTotalSize()),
 				      ' (', t.getPercentDoneStr(), '%)' ];
 			// append UL stats: ', uploaded 8.59 GiB (Ratio: 12.3)'
-			c.push(', 已经上传 ',
+			c.push(', uploaded ',
 			        Transmission.fmt.size(t.getUploadedEver()),
-			        ' (分享率 ',
+			        ' (Ratio ',
 			        Transmission.fmt.ratioString(t.getUploadRatio()),
 			        ')');
 		} else { // not done yet
-			c = [ '已经下载 ',
-				  Transmission.fmt.size(sizeWhenDone - t.getLeftUntilDone()),
-			      ' 总共 ', Transmission.fmt.size(sizeWhenDone),
+			c = [ Transmission.fmt.size(sizeWhenDone - t.getLeftUntilDone()),
+			      ' of ', Transmission.fmt.size(sizeWhenDone),
 			      ' (', t.getPercentDoneStr(), '%)' ];
 		}
 
@@ -254,10 +254,10 @@ TorrentRendererFull.prototype =
 			c.push(' - ');
 			var eta = t.getETA();
 			if (eta < 0 || eta >= (999*60*60) /* arbitrary */)
-				c.push('剩余时间未知');
+				c.push('remaining time unknown');
 			else
-				c.push(', 剩余时间 ',
-						Transmission.fmt.timeInterval(t.getETA()));
+				c.push(Transmission.fmt.timeInterval(t.getETA()),
+				        ' remaining');
 		}
 
 		return c.join('');

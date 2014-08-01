@@ -189,10 +189,10 @@ Transmission.fmt = (function()
 			    hours   = Math.floor ((seconds % 86400) / 3600),
 			    minutes = Math.floor ((seconds % 3600) / 60),
 			    seconds = Math.floor (seconds % 60),
-			    d = days    + ' ' + (days    > 1 ? '天'    : '天'),
-			    h = hours   + ' ' + (hours   > 1 ? '小时'   : '小时'),
-			    m = minutes + ' ' + (minutes > 1 ? '分钟' : '分钟'),
-			    s = seconds + ' ' + (seconds > 1 ? '秒' : '秒');
+			    d = days    + ' ' + (days    > 1 ? 'days'    : 'day'),
+			    h = hours   + ' ' + (hours   > 1 ? 'hours'   : 'hour'),
+			    m = minutes + ' ' + (minutes > 1 ? 'minutes' : 'minute'),
+			    s = seconds + ' ' + (seconds > 1 ? 'seconds' : 'second');
 
 			if (days) {
 				if (days >= 4 || !hours)
@@ -229,13 +229,13 @@ Transmission.fmt = (function()
 			var dateDiff = now.getDate() - myDate.getDate();
 			if (sameYear && sameMonth && Math.abs(dateDiff) <= 1){
 				if (dateDiff === 0){
-					date = "今天";
+					date = "Today";
 				}
 				else if (dateDiff === 1){
-					date = "昨天";
+					date = "Yesterday";
 				}
 				else{
-					date = "明天";
+					date = "Tomorrow";
 				}
 			}
 			else{
@@ -243,10 +243,10 @@ Transmission.fmt = (function()
 			}
 
 			var hours = myDate.getHours();
-			var period = "上午";
+			var period = "AM";
 			if (hours > 12){
 				hours = hours - 12;
-				period = "下午";
+				period = "PM";
 			}
 			if (hours === 0){
 				hours = 12;
@@ -279,9 +279,9 @@ Transmission.fmt = (function()
 			return [ n.toStringWithCommas(), this.ngettext(msgid,msgid_plural,n) ].join(' ');
 		},
 
-		peerStatus: function( flagStr )
-		{
-			var formattedFlags = [];
+		peerStatus: function( flagStr ) 
+		{ 
+			var formattedFlags = []; 
 			for (var i=0, flag; flag=flagStr[i]; ++i)
 			{
 				var explanation = null;
@@ -301,13 +301,13 @@ Transmission.fmt = (function()
 					case "T": explanation = "Peer is connected via uTP"; break;
 				}
 
-				if (!explanation) {
-					formattedFlags.push(flag);
-				} else {
-					formattedFlags.push("<span title=\"" + flag + ': ' + explanation + "\">" + flag + "</span>");
-				}
-			}
-			return formattedFlags.join('');
+				if (!explanation) { 
+					formattedFlags.push(flag); 
+				} else { 
+					formattedFlags.push("<span title=\"" + flag + ': ' + explanation + "\">" + flag + "</span>"); 
+				} 
+			} 
+			return formattedFlags.join(''); 
 		}
 	}
 })();

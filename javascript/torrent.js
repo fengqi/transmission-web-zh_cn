@@ -131,7 +131,7 @@ Torrent.prototype =
 	setField: function(o, name, value)
 	{
 		var i, observer;
-
+		
 		if (o[name] === value)
 			return false;
 		if (o == this.fields && this.fieldObservers[name] && this.fieldObservers[name].length) {
@@ -254,7 +254,7 @@ Torrent.prototype =
 	isFinished: function() { return this.fields.isFinished; },
 
 	// derived accessors
-	hasExtraInfo: function() { return '哈希字符串' in this.fields; },
+	hasExtraInfo: function() { return 'hashString' in this.fields; },
 	isSeeding: function() { return this.getStatus() === Torrent._StatusSeed; },
 	isStopped: function() { return this.getStatus() === Torrent._StatusStopped; },
 	isChecking: function() { return this.getStatus() === Torrent._StatusCheck; },
@@ -266,16 +266,16 @@ Torrent.prototype =
 	getPercentDone: function() { return this.fields.percentDone; },
 	getStateString: function() {
 		switch(this.getStatus()) {
-			case Torrent._StatusStopped:        return this.isFinished() ? '完成做种' : '暂停';
-			case Torrent._StatusCheckWait:      return '等待校验';
-			case Torrent._StatusCheck:          return '正在校验本地数据';
-			case Torrent._StatusDownloadWait:   return '等待下载';
-			case Torrent._StatusDownload:       return '下载中';
-			case Torrent._StatusSeedWait:       return '等待做种';
-			case Torrent._StatusSeed:           return '做种中';
+			case Torrent._StatusStopped:        return this.isFinished() ? 'Seeding complete' : 'Paused';
+			case Torrent._StatusCheckWait:      return 'Queued for verification';
+			case Torrent._StatusCheck:          return 'Verifying local data';
+			case Torrent._StatusDownloadWait:   return 'Queued for download';
+			case Torrent._StatusDownload:       return 'Downloading';
+			case Torrent._StatusSeedWait:       return 'Queued for seeding';
+			case Torrent._StatusSeed:           return 'Seeding';
 			case null:
-			case undefined:                     return '未知';
-			default:                            return '错误';
+			case undefined:                     return 'Unknown';
+			default:                            return 'Error';
 		}
 	},
 	seedRatioLimit: function(controller){
@@ -289,11 +289,11 @@ Torrent.prototype =
 		var str = this.getErrorString();
 		switch(this.getError()) {
 			case Torrent._ErrTrackerWarning:
-				return '服务器返回如下警告: ' + str;
+				return 'Tracker returned a warning: ' + str;
 			case Torrent._ErrTrackerError:
-				return '服务器返回如下错误: ' + str;
+				return 'Tracker returned an error: ' + str;
 			case Torrent._ErrLocalError:
-				return '错误: ' + str;
+				return 'Error: ' + str;
 			default:
 				return null;
 		}

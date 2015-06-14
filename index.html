@@ -61,7 +61,7 @@
 					<option value="finished">已完成</option>
 				</select>
 				<select id="filter-tracker"></select>
-				<input type="search" id="torrent_search" placeholder="关键字" />
+				<input type="search" id="torrent_search" placeholder="查找" />
 				<span id="filter-count">&nbsp;</span>
 			</div>
 
@@ -301,6 +301,20 @@
 			</div>
 		</div>
 
+        <div class="dialog_container" id="rename_container" style="display:none;">
+            <div class="dialog_top_bar"></div>
+            <div class="dialog_window">
+                <div class="dialog_logo"></div>
+                <h2 class="dialog_heading">重命名种子</h2>
+                <div class="dialog_message">
+                    <label for="torrent_rename_name">输入新名称:</label>
+                    <input type="text" id="torrent_rename_name"/>
+                </div>
+                <a href="#rename" id="rename_confirm_button">重命名</a>
+                <a href="#cancel" id="rename_cancel_button">取消</a>
+            </div>
+        </div>
+
 		<div class="dialog_container" id="move_container" style="display:none;">
 			<div class="dialog_top_bar"></div>
 			<div class="dialog_window">
@@ -409,6 +423,7 @@
 				<li class="separator"></li>
 				<li id="context_verify">校验本地数据</li>
 				<li id="context_move">设置本地文件...</li>
+				<li id="context_rename">重命名</li>
 				<li class="separator"></li>
 				<li id="context_reannounce">向 Traker 请求更多用户</li>
 				<li class="separator"></li>

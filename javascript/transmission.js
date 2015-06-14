@@ -1703,7 +1703,7 @@ Transmission.prototype =
 			close: $.proxy(this.onStatsDialogClosed,this),
 			show: 'fade',
 			hide: 'fade',
-			title: 'Statistics'
+			title: '统计'
 		});
 	},
 

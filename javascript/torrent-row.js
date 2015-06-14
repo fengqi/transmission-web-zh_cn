@@ -231,21 +231,24 @@ TorrentRendererFull.prototype =
 
 		if (is_done) {
 			if (totalSize === sizeWhenDone) // seed: '698.05 MiB'
-				c = [ Transmission.fmt.size(totalSize) ];
+				c = [ '文件大小 ',
+                    Transmission.fmt.size(totalSize) ];
 			else // partial seed: '127.21 MiB of 698.05 MiB (18.2%)'
-				c = [ Transmission.fmt.size(sizeWhenDone),
-				      ' of ',
+				c = [ '已经下载 ',
+                      Transmission.fmt.size(sizeWhenDone),
+				      ' 总共 ',
 				      Transmission.fmt.size(t.getTotalSize()),
 				      ' (', t.getPercentDoneStr(), '%)' ];
 			// append UL stats: ', uploaded 8.59 GiB (Ratio: 12.3)'
-			c.push(', uploaded ',
+			c.push(',  已经上传 ',
 			        Transmission.fmt.size(t.getUploadedEver()),
-			        ' (Ratio ',
+			        ' (分享率 ',
 			        Transmission.fmt.ratioString(t.getUploadRatio()),
 			        ')');
 		} else { // not done yet
-			c = [ Transmission.fmt.size(sizeWhenDone - t.getLeftUntilDone()),
-			      ' of ', Transmission.fmt.size(sizeWhenDone),
+			c = [ '已经下载 ',
+                  Transmission.fmt.size(sizeWhenDone - t.getLeftUntilDone()),
+			      ' 总共 ', Transmission.fmt.size(sizeWhenDone),
 			      ' (', t.getPercentDoneStr(), '%)' ];
 		}
 
@@ -256,8 +259,8 @@ TorrentRendererFull.prototype =
 			if (eta < 0 || eta >= (999*60*60) /* arbitrary */)
 				c.push('剩余时间未知');
 			else
-				c.push(Transmission.fmt.timeInterval(t.getETA()),
-				        ' remaining');
+				c.push('剩余时间 ',
+                      Transmission.fmt.timeInterval(t.getETA()));
 		}
 
 		return c.join('');
